@@ -112,19 +112,43 @@ func (p *PythonPreprocessor) indent() string {
 func (p *PythonPreprocessor) findStructuralBrace(line string) int {
 	inString := false
 	stringChar := rune(0)
+	inFString := false
 
-	for i, ch := range line {
+	for i := 0; i < len(line); i++ {
+		ch := line[i]
+
+		if i > 0 && (line[i-1] == 'f' || line[i-1] == 'F') && (ch == '"' || ch == '\'') {
+			inFString = true
+		}
+
 		if (ch == '"' || ch == '\'') && (i == 0 || line[i-1] != '\\') {
 			if !inString {
 				inString = true
-				stringChar = ch
-			} else if ch == stringChar {
+				stringChar = rune(ch)
+			} else if rune(ch) == stringChar {
 				inString = false
 				stringChar = 0
+				inFString = false
 			}
 		}
+
 		if ch == '{' && !inString {
 			return i
+		}
+
+		if ch == '{' && inFString {
+			depth := 1
+			for j := i + 1; j < len(line); j++ {
+				if line[j] == '{' {
+					depth++
+				} else if line[j] == '}' {
+					depth--
+					if depth == 0 {
+						i = j
+						break
+					}
+				}
+			}
 		}
 	}
 	return -1
@@ -169,8 +193,10 @@ func (p *PythonPreprocessor) ProcessFile(inputPath, outputPath string) error {
 }
 
 func (p *PythonPreprocessor) ProcessString(input string) string {
+	p.indentLevel = 0
 	reader := strings.NewReader(input)
 	var builder strings.Builder
+	builder.Grow(len(input) + len(input)/4)
 	_ = p.ProcessReader(reader, &builder)
 	return builder.String()
 }

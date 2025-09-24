@@ -161,10 +161,10 @@ func BenchmarkLargeFile(b *testing.B) {
 	}
 
 	input := builder.String()
+	p := NewPythonPreprocessor(2)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		p := NewPythonPreprocessor(2)
 		_ = p.ProcessString(input)
 	}
 }
