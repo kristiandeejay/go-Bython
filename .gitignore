@@ -1,0 +1,27 @@
+# Output directory
+output/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Go
+go-bython
+go-bython.exe
+*.exe
+*.test
+*.out
+
+# Binaries
+bin/
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+*.coverprofile
+coverage.html
