@@ -33,6 +33,7 @@ func main() {
 		fp := processor.NewFolderProcessor(p, *filePattern, *workers)
 		if err := fp.ProcessFolder(*inputDir, *outputDir); err != nil {
 			log.Fatal(err)
+			return
 		}
 		fmt.Printf("Successfully processed folder: %s -> %s in %v\n", *inputDir, *outputDir, time.Since(start))
 		return
