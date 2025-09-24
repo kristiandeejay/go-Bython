@@ -535,3 +535,153 @@ func TestMultilineDictionary(t *testing.T) {
 	//then
 	assert.Equal(t, expected, result)
 }
+
+func TestSetLiterals(t *testing.T) {
+	//given
+	input := `my_set = {1, 2, 3, 4};
+numbers = {10, 20, 30};
+empty = set();`
+
+	expected := `my_set = {1, 2, 3, 4}
+numbers = {10, 20, 30}
+empty = set()
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}
+
+func TestMultilineSet(t *testing.T) {
+	//given
+	input := `tags = {
+  "python",
+  "golang",
+  "rust"
+};`
+
+	expected := `tags = {
+  "python",
+  "golang",
+  "rust"
+}
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}
+
+func TestSetComprehension(t *testing.T) {
+	//given
+	input := `squares = {x*x for x in range(10)};
+evens = {n for n in numbers if n % 2 == 0};`
+
+	expected := `squares = {x*x for x in range(10)}
+evens = {n for n in numbers if n % 2 == 0}
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}
+
+func TestDictComprehension(t *testing.T) {
+	//given
+	input := `mapping = {k: v for k, v in items};
+squares_dict = {x: x*x for x in range(5)};`
+
+	expected := `mapping = {k: v for k, v in items}
+squares_dict = {x: x*x for x in range(5)}
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}
+
+func TestDictSetAsFunctionArgs(t *testing.T) {
+	//given
+	input := `result = process_data(items={1, 2, 3}, config={"key": "value"});
+output = func(tags={"a", "b"}, data={"x": 1});`
+
+	expected := `result = process_data(items={1, 2, 3}, config={"key": "value"})
+output = func(tags={"a", "b"}, data={"x": 1})
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}
+
+func TestDefaultParameters(t *testing.T) {
+	//given
+	input := `def func(data={}, tags=set()) {
+    pass;
+}
+
+def process(config={"default": True}, items={1, 2}) {
+    return config;
+}`
+
+	expected := `def func(data={}, tags=set()):
+  pass
+
+def process(config={"default": True}, items={1, 2}):
+  return config
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}
+
+func TestNestedDictSet(t *testing.T) {
+	//given
+	input := `data = {
+  "users": {1, 2, 3},
+  "config": {
+    "nested": {"key": "value"}
+  }
+};`
+
+	expected := `data = {
+  "users": {1, 2, 3},
+  "config": {
+    "nested": {"key": "value"}
+  }
+}
+`
+
+	p := NewPythonPreprocessor(2)
+
+	//when
+	result := p.ProcessString(input)
+
+	//then
+	assert.Equal(t, expected, result)
+}

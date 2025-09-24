@@ -222,6 +222,8 @@ func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
 	inString := false
 	stringChar := rune(0)
 	inFString := false
+	dictBraceIndex := -1
+	depth := 0
 
 	for i := 0; i < len(line); i++ {
 		ch := line[i]
@@ -241,13 +243,6 @@ func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
 			}
 		}
 
-		if ch == '{' && !inString {
-			before := strings.TrimSpace(line[:i])
-			if strings.HasSuffix(before, "=") || strings.HasSuffix(before, ":") || strings.HasSuffix(before, "(") || strings.HasSuffix(before, "[") || strings.HasSuffix(before, ",") {
-				return i
-			}
-		}
-
 		if ch == '{' && inFString {
 			depth := 1
 			for j := i + 1; j < len(line); j++ {
@@ -261,7 +256,32 @@ func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
 					}
 				}
 			}
+			continue
 		}
+
+		if ch == '{' && !inString {
+			before := strings.TrimSpace(line[:i])
+			if strings.HasSuffix(before, ")") {
+				continue
+			}
+			if strings.HasSuffix(before, "=") || strings.HasSuffix(before, ":") || strings.HasSuffix(before, "(") || strings.HasSuffix(before, "[") || strings.HasSuffix(before, ",") || strings.HasSuffix(before, "return") {
+				if dictBraceIndex == -1 {
+					dictBraceIndex = i
+				}
+				depth++
+			}
+		}
+
+		if ch == '}' && !inString && depth > 0 {
+			depth--
+			if depth == 0 {
+				dictBraceIndex = -1
+			}
+		}
+	}
+
+	if depth > 0 {
+		return dictBraceIndex
 	}
 	return -1
 }
@@ -269,7 +289,11 @@ func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
 func (p *PythonPreprocessor) isDictionaryBrace(line string, braceIndex int) bool {
 	before := strings.TrimSpace(line[:braceIndex])
 
-	if strings.HasSuffix(before, "=") || strings.HasSuffix(before, ":") || strings.HasSuffix(before, "(") || strings.HasSuffix(before, "[") || strings.HasSuffix(before, ",") {
+	if strings.HasSuffix(before, ")") {
+		return false
+	}
+
+	if strings.HasSuffix(before, "=") || strings.HasSuffix(before, ":") || strings.HasSuffix(before, "(") || strings.HasSuffix(before, "[") || strings.HasSuffix(before, ",") || strings.HasSuffix(before, "return") {
 		return true
 	}
 
