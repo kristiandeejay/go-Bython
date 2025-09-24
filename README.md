@@ -163,18 +163,20 @@ Tested on AMD Ryzen 9 9950X3D (16-Core Processor):
 
 | Benchmark                  | Time/op | Memory/op | Allocs/op |
 |----------------------------|---------|-----------|-----------|
-| Simple if/else             | 985 ns  | 4.47 KB   | 18        |
-| Nested blocks (5 levels)   | 1.31 μs | 4.77 KB   | 31        |
-| Class with methods         | 2.82 μs | 6.54 KB   | 72        |
-| Complex program            | 5.59 μs | 9.79 KB   | 149       |
-| Large file (100 functions) | 54.9 μs | 63.6 KB   | 1516      |
-| Parallel processing        | 628 ns  | 5.19 KB   | 30        |
+| Simple if/else             | 989 ns  | 4.46 KB   | 16        |
+| Nested blocks (5 levels)   | 1.22 μs | 4.74 KB   | 27        |
+| Class with methods         | 2.68 μs | 6.26 KB   | 68        |
+| Complex program            | 5.22 μs | 8.60 KB   | 143       |
+| Large file (100 functions) | 49.0 μs | 44.2 KB   | 1504      |
+| String with braces         | 1.49 μs | 5.04 KB   | 29        |
+| Parallel processing        | 613 ns  | 4.95 KB   | 27        |
 
 **So... this means:**
 
 - **~1 million simple statements/second** on a single core
-- **~160,000 complex statements/second** with nested structures
-- **~18,000 functions/second** for large files
+- **~192,000 complex statements/second** with nested structures
+- **~20,400 functions/second** for large files
+- **Efficient f-string handling** with braces in strings
 - **Linear scalability** with concurrent processing
 
 ### Real-world Performance
