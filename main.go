@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"go-Bython/processor"
 )
@@ -28,11 +29,12 @@ func main() {
 			log.Fatal("output directory (-od) is required when using input directory (-d)")
 		}
 
+		start := time.Now()
 		fp := processor.NewFolderProcessor(p, *filePattern, *workers)
 		if err := fp.ProcessFolder(*inputDir, *outputDir); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("Successfully processed folder: %s -> %s\n", *inputDir, *outputDir)
+		fmt.Printf("Successfully processed folder: %s -> %s in %v\n", *inputDir, *outputDir, time.Since(start))
 		return
 	}
 
@@ -41,11 +43,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	start := time.Now()
 	if err := p.ProcessFile(*inputFile, *outputFile); err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Successfully processed: %s -> %s\n", *inputFile, *outputFile)
+	fmt.Printf("Successfully processed: %s -> %s in %v\n", *inputFile, *outputFile, time.Since(start))
 }
 
 func init() {
