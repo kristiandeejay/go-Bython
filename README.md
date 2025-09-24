@@ -183,8 +183,8 @@ Tested on AMD Ryzen 9 9950X3D (16-Core Processor):
 
 - A typical 100-line Python file processes in **~10 microseconds**
 - A 1000-file codebase can be processed in **under 1 second** with 8 workers
-- Memory efficient: ~60KB per 100 functions
-- Zero-allocation string processing for optimal performance
+- Memory efficient: ~44KB per 100 functions
+- Optimised string processing with pre-allocated buffers
 
 Run benchmarks yourself:
 
