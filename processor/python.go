@@ -22,6 +22,10 @@ func NewPythonPreprocessor(indentSize int) *PythonPreprocessor {
 	}
 }
 
+var controlKeywords = []string{
+	"if ", "elif ", "else", "while ", "for ", "def ", "class ", "try", "except", "finally", "with ",
+}
+
 func (p *PythonPreprocessor) processLine(line string) []string {
 	trimmed := strings.TrimSpace(line)
 	if trimmed == "" {
@@ -88,10 +92,6 @@ func (p *PythonPreprocessor) processLine(line string) []string {
 }
 
 func (p *PythonPreprocessor) isControlStatement(line string) bool {
-	controlKeywords := []string{
-		"if ", "elif ", "else", "while ", "for ", "def ", "class ", "try", "except", "finally", "with ",
-	}
-
 	for _, keyword := range controlKeywords {
 		if strings.HasPrefix(line, keyword) || line == strings.TrimSpace(keyword) {
 			return true
