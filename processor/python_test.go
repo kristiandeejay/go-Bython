@@ -748,7 +748,8 @@ for hour in range(0,23):
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -776,7 +777,8 @@ top()
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
