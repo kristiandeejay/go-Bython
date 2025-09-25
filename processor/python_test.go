@@ -122,7 +122,8 @@ if __name__ == "__main__":
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -145,7 +146,8 @@ else:
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -170,7 +172,8 @@ func TestNestedBlocks(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -194,7 +197,8 @@ func TestWhileLoop(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -213,7 +217,8 @@ func TestForLoop(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -232,7 +237,8 @@ func TestFunctionDefinition(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -256,7 +262,8 @@ func TestClassDefinition(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -279,7 +286,8 @@ if x:
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -302,7 +310,8 @@ func TestEmptyLines(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -321,7 +330,8 @@ func TestDifferentIndentSize(t *testing.T) {
 	p := NewPythonPreprocessor(4)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -348,7 +358,8 @@ finally:
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -367,7 +378,8 @@ func TestWithStatement(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -398,7 +410,8 @@ else:
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -440,7 +453,8 @@ dict["number"] = 42
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -458,7 +472,8 @@ data = {"users": ["alice", "bob"], "count": 2}
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -481,7 +496,8 @@ func TestDictionaryInControlFlow(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -502,7 +518,8 @@ for key in user:
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -530,7 +547,8 @@ func TestMultilineDictionary(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -550,7 +568,8 @@ empty = set()
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -574,7 +593,8 @@ func TestMultilineSet(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -592,7 +612,8 @@ evens = {n for n in numbers if n % 2 == 0}
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -610,7 +631,8 @@ squares_dict = {x: x*x for x in range(5)}
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -628,7 +650,8 @@ output = func(tags={"a", "b"}, data={"x": 1})
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -654,7 +677,8 @@ def process(config={"default": True}, items={1, 2}):
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)
@@ -680,7 +704,8 @@ func TestNestedDictSet(t *testing.T) {
 	p := NewPythonPreprocessor(2)
 
 	//when
-	result := p.ProcessString(input)
+	result, err := p.ProcessString(input)
+	assert.NoError(t, err)
 
 	//then
 	assert.Equal(t, expected, result)

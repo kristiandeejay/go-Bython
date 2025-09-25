@@ -170,80 +170,40 @@ func (p *PythonPreprocessor) indent() string {
 	return strings.Repeat(p.indentChar, p.indentLevel)
 }
 
-func (p *PythonPreprocessor) findStructuralBrace(line string) int {
-	inString := false
-	stringChar := rune(0)
-	inFString := false
-
-	for i := 0; i < len(line); i++ {
-		ch := line[i]
-
-		if i > 0 && (line[i-1] == 'f' || line[i-1] == 'F') && (ch == '"' || ch == '\'') {
-			inFString = true
-		}
-
-		if (ch == '"' || ch == '\'') && (i == 0 || line[i-1] != '\\') {
-			if !inString {
-				inString = true
-				stringChar = rune(ch)
-			} else if rune(ch) == stringChar {
-				inString = false
-				stringChar = 0
-				inFString = false
-			}
-		}
-
-		if ch == '{' && !inString {
-			if p.isDictionaryBrace(line, i) {
-				continue
-			}
-			return i
-		}
-
-		if ch == '{' && inFString {
-			depth := 1
-			for j := i + 1; j < len(line); j++ {
-				if line[j] == '{' {
-					depth++
-				} else if line[j] == '}' {
-					depth--
-					if depth == 0 {
-						i = j
-						break
-					}
-				}
-			}
-		}
-	}
-	return -1
+// stringParser holds the state for parsing strings and f-strings
+type stringParser struct {
+	inString   bool
+	stringChar rune
+	inFString  bool
 }
 
-func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
-	inString := false
-	stringChar := rune(0)
-	inFString := false
+// parseBraces finds braces while properly handling strings and f-strings
+func (p *PythonPreprocessor) parseBraces(line string, findStructural bool) int {
+	parser := stringParser{}
 	dictBraceIndex := -1
 	depth := 0
 
 	for i := 0; i < len(line); i++ {
 		ch := line[i]
 
+		// Detect f-string start
 		if i > 0 && (line[i-1] == 'f' || line[i-1] == 'F') && (ch == '"' || ch == '\'') {
-			inFString = true
+			parser.inFString = true
 		}
 
+		// Handle string quotes
 		if (ch == '"' || ch == '\'') && (i == 0 || line[i-1] != '\\') {
-			if !inString {
-				inString = true
-				stringChar = rune(ch)
-			} else if rune(ch) == stringChar {
-				inString = false
-				stringChar = 0
-				inFString = false
+			if !parser.inString {
+				parser.inString = true
+				parser.stringChar = rune(ch)
+			} else if rune(ch) == parser.stringChar {
+				parser.inString = false
+				parser.stringChar = 0
+				parser.inFString = false
 			}
 		}
 
-		if ch == '{' && inFString {
+		if ch == '{' && parser.inFString {
 			depth := 1
 			for j := i + 1; j < len(line); j++ {
 				if line[j] == '{' {
@@ -259,20 +219,29 @@ func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
 			continue
 		}
 
-		if ch == '{' && !inString {
-			before := strings.TrimSpace(line[:i])
-			if strings.HasSuffix(before, ")") {
-				continue
-			}
-			if strings.HasSuffix(before, "=") || strings.HasSuffix(before, ":") || strings.HasSuffix(before, "(") || strings.HasSuffix(before, "[") || strings.HasSuffix(before, ",") || strings.HasSuffix(before, "return") {
-				if dictBraceIndex == -1 {
-					dictBraceIndex = i
+		if ch == '{' && !parser.inString {
+			if findStructural {
+				if p.isDictionaryBrace(line, i) {
+					continue
 				}
-				depth++
+				return i
+			} else {
+				before := strings.TrimSpace(line[:i])
+				if strings.HasSuffix(before, ")") {
+					continue
+				}
+				if strings.HasSuffix(before, "=") || strings.HasSuffix(before, ":") ||
+					strings.HasSuffix(before, "(") || strings.HasSuffix(before, "[") ||
+					strings.HasSuffix(before, ",") || strings.HasSuffix(before, "return") {
+					if dictBraceIndex == -1 {
+						dictBraceIndex = i
+					}
+					depth++
+				}
 			}
 		}
 
-		if ch == '}' && !inString && depth > 0 {
+		if ch == '}' && !parser.inString && !findStructural && depth > 0 {
 			depth--
 			if depth == 0 {
 				dictBraceIndex = -1
@@ -280,10 +249,22 @@ func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
 		}
 	}
 
+	if findStructural {
+		return -1
+	}
+
 	if depth > 0 {
 		return dictBraceIndex
 	}
 	return -1
+}
+
+func (p *PythonPreprocessor) findStructuralBrace(line string) int {
+	return p.parseBraces(line, true)
+}
+
+func (p *PythonPreprocessor) findDictionaryBrace(line string) int {
+	return p.parseBraces(line, false)
 }
 
 func (p *PythonPreprocessor) isDictionaryBrace(line string, braceIndex int) bool {
@@ -340,15 +321,18 @@ func (p *PythonPreprocessor) ProcessFile(inputPath, outputPath string) error {
 	return p.ProcessReader(inputFile, outputFile)
 }
 
-func (p *PythonPreprocessor) ProcessString(input string) string {
+func (p *PythonPreprocessor) ProcessString(input string) (string, error) {
 	p.indentLevel = 0
 	p.structuralBlocks = 0
 	p.dictDepth = 0
 	reader := strings.NewReader(input)
 	var builder strings.Builder
 	builder.Grow(len(input) + len(input)/4)
-	_ = p.ProcessReader(reader, &builder)
-	return builder.String()
+	err := p.ProcessReader(reader, &builder)
+	if err != nil {
+		return "", err
+	}
+	return builder.String(), nil
 }
 
 func (p *PythonPreprocessor) IndentSize() int {
